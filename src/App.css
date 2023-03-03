@@ -1,0 +1,39 @@
+/* Estilos para el contenedor principal */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: aqua;
+}
+
+/* Estilos para los títulos */
+h4 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* Estilos para los elementos de la lista */
+.item {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Estilos para los elementos de disponibilidad */
+.disponibilidad {
+  color: #fff;
+  background-color: green;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+/* Estilos para los elementos de no disponibilidad */
+.no-disponibilidad {
+  color: #fff;
+  background-color: red;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
