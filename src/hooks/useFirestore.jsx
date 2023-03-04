@@ -1,35 +1,57 @@
-// import { useState, useEffect } from "react"
-// import { getDatabase, ref, get, onValue } from "firebase/database";
-// import firebased from "../firebase/firebase";
+import { useState, useEffect } from "react"
+import { getDatabase, ref, get, onValue } from "firebase/database";
+import app from "../firebase/firebase";
 
-// const db = getDatabase(firebased);
+const db = getDatabase(app);
 
-// const useFirestore = () => {
+const useFirestore = () => {
 
-//     const [viaje, setViaje] = useState([])
+    const [viaje, setViaje] = useState([])
+    const [origen, setOrigen] = useState("")
+    const [destino, setDestino] = useState("")
 
-//     const dataFirebase = async () => {
-//         try {
-//             const dbRef = ref(db, "viajes");
-//             const snapshot = await get(dbRef);
-//             const info = snapshot.val();
-//             setViaje(info.data);
-//             console.log(info.data);
-//             onValue(dbRef, dataFirebase);
-//         } catch (error) {
-//             console.log(error);
-//         }
-//     };
+    const getDataFirebase = async () => {
+        try {
+            const snapshot = await get(ref(db, "viajes"));
+            const info = snapshot.val();
+            setViaje(info.data);
+            console.log(info.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
-//     useEffect(() => {
-//         dataFirebase();
-//     }, []);
+    useEffect(() => {
+        getDataFirebase();
+        const unsubscribe = onValue(ref(db, "viajes"), (snapshot) => {
+            const info = snapshot.val();
+            setViaje(info.data);
+        });
 
-//     return {
-//         viaje
-//     }
+        return () => {
+            unsubscribe();
+        }
+    }, []);
 
-// }
+    const handleOrigenChange = (event) => {
+        console.log(event.target.value)
+        event.preventDefault()
+        setOrigen(event.target.value);
+    };
 
+    const handleDestinoChange = (event) => {
+        console.log(event.target.value)
+        event.preventDefault()
+        setDestino(event.target.value);
+    };
 
-// export default useFirestore
+    return {
+        viaje,
+        origen,
+        destino,
+        handleOrigenChange,
+        handleDestinoChange
+    }
+}
+
+export default useFirestore;

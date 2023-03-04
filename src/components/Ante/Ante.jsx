@@ -2,11 +2,11 @@ import React from 'react'
 import Final from '../Final/Final'
 
 
-const Ante = ({ viaje }) => {
+const Ante = ({ filtro }) => {
 
   return (
     <>
-      {viaje.map((item) => (<Final key={item.id} item={item} />))}
+      {filtro.map((item) => (<Final key={item.id} item={item} />))}
     </>
 
   )

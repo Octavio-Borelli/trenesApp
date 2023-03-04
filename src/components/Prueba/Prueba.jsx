@@ -1,37 +1,32 @@
-import { useState, useEffect } from 'react';
-import { getDatabase, ref, onValue, get } from "firebase/database";
+import { useState } from "react"
 import Ante from '../Ante/Ante';
-import app from '../../firebase/firebase';
-
+import useFirestore from '../../hooks/useFirestore';
 
 const Prueba = () => {
+    const { viaje, origen, destino, handleOrigenChange, handleDestinoChange } = useFirestore();
+    const [filtro, setFiltro] = useState([]);
+    const [error, setError] = useState(null);
 
-    const db = getDatabase(app)
-
-    const [viaje, setViaje] = useState([])
-
-    useEffect(() => {
-        try {
-            const fetchViaje = async () => {
-                const snapshot = await get(dbRef)
-                const info = snapshot.val();
-                setViaje(info.data);
-            };
-            const dbRef = ref(db, "viajes");
-            onValue(dbRef, fetchViaje);
-
-        } catch (error) {
-            console.log(error)
+    const handleFiltro = () => {
+        if (viaje) {
+            const viajesFiltrados = viaje.filter((item) => item.Origen === origen && item.Destino === destino);
+            if (viajesFiltrados.length > 0) {
+                setFiltro(viajesFiltrados);
+                console.log(viajesFiltrados)
+                setError(null);
+            } else {
+                setFiltro([]);
+                setError(<h3>"No hay pasajes disponibles."</h3>);
+            }
+        } else {
+            setError(<h3>"Ingrese una localidad válida."</h3>);
         }
-
-    }, []);
-
+    };
 
     return (
         <>
-
-            <div><Ante viaje={viaje} />
-                {/* <label>
+            <div>
+                <label>
                     Origen:
                     <input type="text" value={origen} onChange={handleOrigenChange} />
                 </label>
@@ -39,18 +34,13 @@ const Prueba = () => {
                     Destino:
                     <input type="text" value={destino} onChange={handleDestinoChange} />
                 </label>
-                <button type="button" onClick={buscarViajes}>Buscar</button> */}
+                <button onClick={handleFiltro}>Buscar</button>
             </div>
+            {error && <div>{error}</div>}
+            <Ante filtro={filtro} />
         </>
     )
 }
 
-
-export default Prueba
-
-
-// onValue(dbRef, (snapshot) => {
-//     const data = snapshot.val();
-//     setViaje(data)
-// });
+export default Prueba;
 

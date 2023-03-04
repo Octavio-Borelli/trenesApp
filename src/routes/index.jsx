@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Prueba from '../components/Prueba/Prueba'
 
-
 const Rutas = () => {
     return (
         <>
