@@ -9,6 +9,8 @@ const useFirestore = () => {
     const [viaje, setViaje] = useState([])
     const [origen, setOrigen] = useState("")
     const [destino, setDestino] = useState("")
+    const [inputIncorrecto, setInputIncorrecto] = useState(null);
+    const [isTyping, setIsTyping] = useState(false);
 
     const getDataFirebase = async () => {
         try {
@@ -34,15 +36,43 @@ const useFirestore = () => {
     }, []);
 
     const handleOrigenChange = (event) => {
-        console.log(event.target.value)
-        event.preventDefault()
-        setOrigen(event.target.value);
+        const { value } = event.target;
+        if (value.trim() === '') {
+            setInputIncorrecto(<span>"El campo origen no puede estar vacío."</span>);
+            setOrigen('');
+        } else if (viaje && !viaje.some((item) => item.Origen === value)) {
+            setInputIncorrecto(<span>"El origen ingresado no es válido."</span>);
+            setOrigen(value);
+        } else {
+            setInputIncorrecto(null);
+            setOrigen(value);
+        }
+        setIsTyping(true);
+        event.preventDefault();
+
     };
 
     const handleDestinoChange = (event) => {
-        console.log(event.target.value)
-        event.preventDefault()
-        setDestino(event.target.value);
+        const { value } = event.target;
+        if (value.trim() === '') {
+            setInputIncorrecto(<span>"El campo destino no puede estar vacío."</span>);
+            setDestino('');
+        } else if (viaje && !viaje.some((item) => item.Origen === value)) {
+            setInputIncorrecto(<span>"El destino ingresado no es válido."</span>);
+            setDestino(value);
+        } else {
+            setInputIncorrecto(null);
+            setDestino(value);
+        }
+        setIsTyping(true);
+        event.preventDefault();
+    };
+
+    const handleOrigenBlur = () => {
+        setIsTyping(false);
+    };
+    const handleDestinoBlur = () => {
+        setIsTyping(false);
     };
 
     return {
@@ -50,7 +80,11 @@ const useFirestore = () => {
         origen,
         destino,
         handleOrigenChange,
-        handleDestinoChange
+        handleDestinoChange,
+        setInputIncorrecto,
+        inputIncorrecto,
+        handleOrigenBlur,
+        handleDestinoBlur
     }
 }
 

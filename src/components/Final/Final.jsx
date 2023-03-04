@@ -11,7 +11,7 @@ const Final = ({ item }) => {
                 <h4>Servicio:{item.Servicio}</h4>
                 <h4>Hora salida:{item['Hora salida']}</h4>
                 <h4>Hora llegada:{item['Hora llegada']}</h4>
-                <h4>{item['Trenes orientación']}</h4>
+                <h4>Orientación: {item['Trenes orientación']}</h4>
                 <h4>Pullman:{item.Pullman}</h4>
                 <h4>Primera:{item.Primera}</h4>
                 <h4>Pullman(D):{item['Pullman(D)']}</h4>
