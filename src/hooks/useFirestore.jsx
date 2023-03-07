@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { getDatabase, ref, get, onValue } from "firebase/database";
 import app from "../firebase/firebase";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const db = getDatabase(app);
 
@@ -11,13 +12,14 @@ const useFirestore = () => {
     const [destino, setDestino] = useState("")
     const [inputIncorrecto, setInputIncorrecto] = useState(null);
     const [isTyping, setIsTyping] = useState(false);
+    const [registrarse, setRegistrarse] = useState(null);
+
 
     const getDataFirebase = async () => {
         try {
             const snapshot = await get(ref(db, "viajes"));
             const info = snapshot.val();
             setViaje(info.data);
-            console.log(info.data);
         } catch (error) {
             console.log(error);
         }
@@ -75,6 +77,27 @@ const useFirestore = () => {
         setIsTyping(false);
     };
 
+    const auth = getAuth();
+
+    const registro = async (email, password) => {
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            setRegistrarse(user);
+            console.log(`El usuario ${user.email} se registró correctamente`);
+        } catch (error) {
+            console.error(`Error al registrar usuario: ${error.message}`);
+        }
+    }
+
+    const handleSubmit = async (email, password) => {
+        try {
+            await registro(email, password);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     return {
         viaje,
         origen,
@@ -84,7 +107,12 @@ const useFirestore = () => {
         setInputIncorrecto,
         inputIncorrecto,
         handleOrigenBlur,
-        handleDestinoBlur
+        handleDestinoBlur,
+        registrarse,
+        registro,
+        handleSubmit,
+        isTyping,
+
     }
 }
 

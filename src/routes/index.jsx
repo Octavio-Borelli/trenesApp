@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Ingresar from '../components/Ingresar/Ingresar'
 import Prueba from '../components/Prueba/Prueba'
 
 const Rutas = () => {
@@ -6,8 +7,9 @@ const Rutas = () => {
         <>
             <BrowserRouter>
                 <Routes>
+                    <Route path="/" element={<Ingresar />} />
+                    <Route path="/Prueba" element={<Prueba />} />
                     <Route path="*" element={<h1>not found</h1>} />
-                    <Route path="/" element={<Prueba />} />
                 </Routes>
             </BrowserRouter>
         </>
