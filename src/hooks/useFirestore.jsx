@@ -14,7 +14,6 @@ const useFirestore = () => {
     const [isTyping, setIsTyping] = useState(false);
     const [registrarse, setRegistrarse] = useState(null);
 
-
     const getDataFirebase = async () => {
         try {
             const snapshot = await get(ref(db, "viajes"));
@@ -112,7 +111,6 @@ const useFirestore = () => {
         registro,
         handleSubmit,
         isTyping,
-
     }
 }
 
