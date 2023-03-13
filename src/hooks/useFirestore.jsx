@@ -19,6 +19,7 @@ const useFirestore = () => {
             const snapshot = await get(ref(db, "viajes"));
             const info = snapshot.val();
             setViaje(info.data);
+            console.log(info.data);
         } catch (error) {
             console.log(error);
         }

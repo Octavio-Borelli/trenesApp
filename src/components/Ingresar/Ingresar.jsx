@@ -17,8 +17,6 @@ const Ingresar = () => {
     return (
         <div className='fondoIngresar'>
             <form className="ingresar" onSubmit={handleAuth}>
-
-
                 <label>Usuario:
                     <input className="usuarioIngresar" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
                 </label>
