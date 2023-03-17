@@ -6,7 +6,7 @@ const Ante = ({ filtro }) => {
 
   return (
     <>
-      {filtro.map((item) => (<Final key={item.id} item={item} />))}
+      {filtro && filtro.map((item) => (<Final key={item.id} item={item} />))}
     </>
 
   )
