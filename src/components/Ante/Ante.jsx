@@ -14,5 +14,3 @@ const Ante = ({ filtro }) => {
 
 export default Ante
 
-
-
