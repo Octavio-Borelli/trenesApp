@@ -106,6 +106,8 @@ const Prueba = () => {
             {error && <div>{error}</div>}
             {inputIncorrecto && <div>{inputIncorrecto}</div>}
             <Ante filtro={filtro} />
+
+
         </>
     )
 }
