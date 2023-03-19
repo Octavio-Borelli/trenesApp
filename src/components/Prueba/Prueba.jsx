@@ -102,12 +102,11 @@ const Prueba = () => {
                 )}
                 <br />
                 <button onClick={handleFiltro} disabled={!origen || !destino}>Buscar</button>
+                <br />
             </div>
             {error && <div>{error}</div>}
             {inputIncorrecto && <div>{inputIncorrecto}</div>}
             <Ante filtro={filtro} />
-
-
         </>
     )
 }
