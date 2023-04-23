@@ -8,7 +8,7 @@ const Rutas = () => {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Ingresar />} />
-                    <Route path="/Prueba" element={<Prueba />} />
+                    <Route path="/prueba" element={<Prueba />} />
                     <Route path="*" element={<h1>not found</h1>} />
                 </Routes>
             </BrowserRouter>

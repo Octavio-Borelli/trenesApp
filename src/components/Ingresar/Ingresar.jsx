@@ -1,32 +1,43 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import useFirestore from '../../hooks/useFirestore';
+import { useState, useContext } from "react"
+import { AppContext } from "../../context/Proveedor";
+import ModalRegistro from "../ModalRegistro/ModalRegistro";
 
 const Ingresar = () => {
-    const { handleSubmit, registrarse } = useFirestore();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const navigate = useNavigate();
 
-    const handleAuth = (event) => {
+    const { handleEmailChange,
+        handlePasswordChange,
+        handleSubmit,
+        email,
+        password } = useContext(AppContext)
+
+    const [mostrarModal, setMostrarModal] = useState(false);
+
+    const handleAuth = async (event) => {
         event.preventDefault();
-        handleSubmit(email, password);
-        navigate('/Prueba');
+        const success = handleSubmit(email, password);
+        if (success) {
+            try {
+                setMostrarModal(true);
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
     };
 
     return (
         <div className='fondoIngresar'>
-            <form className="ingresar" onSubmit={handleAuth}>
+            <form className="ingresar">
                 <label>Usuario:
-                    <input className="usuarioIngresar" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+                    <input className="usuarioIngresar" type="email" value={email} onChange={handleEmailChange} />
                 </label>
                 <label>Contraseña:
-                    <input className="contraseñaIngresar" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+                    <input className="contraseñaIngresar" type="password" value={password} onChange={handlePasswordChange} />
                 </label>
-                <button className="botonIngresar" type="submit">Ingresar</button>
-                {registrarse && <p>Usuario registrado correctamente: {registrarse.email}</p>}
+                <button className="botonIngresar" type="submit" onClick={handleAuth} disabled={!email || !password}>Ingresar</button>
             </form>
-        </div>
+            {mostrarModal === true ? <ModalRegistro setMostrarModal={setMostrarModal} /> : null}
+        </div >
     );
 };
 

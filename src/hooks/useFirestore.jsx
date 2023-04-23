@@ -1,25 +1,27 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { getDatabase, ref, get, onValue } from "firebase/database";
 import app from "../firebase/firebase";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import emailjs from "emailjs-com";
+import { AppContext } from "../context/Proveedor";
 
 const db = getDatabase(app);
 
 const useFirestore = () => {
 
+    const { email, setEmail, setPassword } = useContext(AppContext)
+
     const [viaje, setViaje] = useState([])
     const [origen, setOrigen] = useState("")
     const [destino, setDestino] = useState("")
     const [inputIncorrecto, setInputIncorrecto] = useState(null);
-    const [isTyping, setIsTyping] = useState(false);
-    const [registrarse, setRegistrarse] = useState(null);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
     const getDataFirebase = async () => {
         try {
             const snapshot = await get(ref(db, "viajes"));
             const info = snapshot.val();
             setViaje(info.data);
-            console.log(info.data);
         } catch (error) {
             console.log(error);
         }
@@ -31,7 +33,6 @@ const useFirestore = () => {
             const info = snapshot.val();
             setViaje(info.data);
         });
-
         return () => {
             unsubscribe();
         }
@@ -49,7 +50,6 @@ const useFirestore = () => {
             setInputIncorrecto(null);
             setOrigen(value);
         }
-        setIsTyping(true);
         event.preventDefault();
 
     };
@@ -66,37 +66,45 @@ const useFirestore = () => {
             setInputIncorrecto(null);
             setDestino(value);
         }
-        setIsTyping(true);
         event.preventDefault();
     };
 
-    const handleOrigenBlur = () => {
-        setIsTyping(false);
-    };
-    const handleDestinoBlur = () => {
-        setIsTyping(false);
+    const handleStartDateChange = (date) => {
+        setStartDate(date);
     };
 
-    const auth = getAuth();
+    const handleEndDateChange = (date) => {
+        setEndDate(date);
+    };
 
-    const registro = async (email, password) => {
+    const sendAlert = async () => {
         try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-            setRegistrarse(user);
-            console.log(`El usuario ${user.email} se registró correctamente`);
+            const emailContent = {
+                subject: "Alerta de viaje",
+                to_email: email,
+                message_html: `Origen: ${origen}, Destino: ${destino}, Fecha ida: ${startDate}, Fecha vuelta: ${endDate}`
+            };
+            const result = await emailjs.send('gmail', 'template_eo49qj5', emailContent, 'CPcOPBvvDFM4roihl');
+            console.log(result.text);
+            console.log(emailContent);
         } catch (error) {
-            console.error(`Error al registrar usuario: ${error.message}`);
+            console.log(error);
         }
-    }
+    };
 
-    const handleSubmit = async (email, password) => {
-        try {
-            await registro(email, password);
-        } catch (error) {
-            console.error(error);
+    const handleSubmitForm = async (event) => {
+        event.preventDefault();
+
+        if (origen !== "" || destino !== "" || startDate !== null || endDate !== null) {
+            try {
+                await sendAlert();
+                setEmail("");
+                setPassword("");
+            } catch (error) {
+                console.log(error)
+            }
         }
-    }
+    };
 
     return {
         viaje,
@@ -106,13 +114,14 @@ const useFirestore = () => {
         handleDestinoChange,
         setInputIncorrecto,
         inputIncorrecto,
-        handleOrigenBlur,
-        handleDestinoBlur,
-        registrarse,
-        registro,
-        handleSubmit,
-        isTyping,
+        handleStartDateChange,
+        handleEndDateChange,
+        startDate,
+        endDate,
+        handleSubmitForm
     }
 }
 
 export default useFirestore;
+
+
