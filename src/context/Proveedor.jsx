@@ -7,6 +7,13 @@ const Proveedor = ({ children }) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [mostrarModal, setMostrarModal] = useState(false);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [orientacion, setOrientacion] = useState("");
+    const [origen, setOrigen] = useState("")
+    const [destino, setDestino] = useState("")
+
 
     const auth = getAuth();
     const registro = async (email, password) => {
@@ -42,6 +49,14 @@ const Proveedor = ({ children }) => {
         setPassword(e.target.value);
     };
 
+    const handleStartDateChange = (date) => {
+        setStartDate(date);
+    };
+
+    const handleEndDateChange = (date) => {
+        setEndDate(date);
+    };
+
     return (
         <AppContext.Provider value={{
             email,
@@ -50,7 +65,22 @@ const Proveedor = ({ children }) => {
             setPassword,
             handleSubmit,
             handleEmailChange,
-            handlePasswordChange
+            handlePasswordChange,
+            mostrarModal,
+            setMostrarModal,
+            startDate,
+            endDate,
+            handleStartDateChange,
+            handleEndDateChange,
+            setStartDate,
+            setEndDate,
+            orientacion,
+            setOrientacion,
+            origen,
+            destino,
+            setOrigen,
+            setDestino
+
         }}>
             {children}
         </AppContext.Provider >

@@ -1,21 +1,27 @@
 import { useState, useEffect, useContext } from "react"
-import { getDatabase, ref, get, onValue } from "firebase/database";
-import app from "../firebase/firebase";
+import { ref, get, onValue } from "firebase/database";
 import emailjs from "emailjs-com";
 import { AppContext } from "../context/Proveedor";
-
-const db = getDatabase(app);
+import { db } from '../firebase/firebase';
 
 const useFirestore = () => {
 
-    const { email, setEmail, setPassword } = useContext(AppContext)
+    const { email,
+        setMostrarModal,
+        startDate,
+        endDate,
+        setStartDate,
+        setEndDate,
+        origen,
+        destino,
+        setOrigen,
+        setDestino
+    } = useContext(AppContext)
 
     const [viaje, setViaje] = useState([])
-    const [origen, setOrigen] = useState("")
-    const [destino, setDestino] = useState("")
+    // const [origen, setOrigen] = useState("")
+    // const [destino, setDestino] = useState("")
     const [inputIncorrecto, setInputIncorrecto] = useState(null);
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
 
     const getDataFirebase = async () => {
         try {
@@ -38,6 +44,7 @@ const useFirestore = () => {
         }
     }, []);
 
+
     const handleOrigenChange = (event) => {
         const { value } = event.target;
         if (value.trim() === '') {
@@ -51,7 +58,6 @@ const useFirestore = () => {
             setOrigen(value);
         }
         event.preventDefault();
-
     };
 
     const handleDestinoChange = (event) => {
@@ -69,37 +75,49 @@ const useFirestore = () => {
         event.preventDefault();
     };
 
-    const handleStartDateChange = (date) => {
-        setStartDate(date);
-    };
-
-    const handleEndDateChange = (date) => {
-        setEndDate(date);
-    };
-
     const sendAlert = async () => {
-        try {
-            const emailContent = {
-                subject: "Alerta de viaje",
-                to_email: email,
-                message_html: `Origen: ${origen}, Destino: ${destino}, Fecha ida: ${startDate}, Fecha vuelta: ${endDate}`
-            };
-            const result = await emailjs.send('gmail', 'template_eo49qj5', emailContent, 'CPcOPBvvDFM4roihl');
-            console.log(result.text);
-            console.log(emailContent);
-        } catch (error) {
-            console.log(error);
+        const currentDate = new Date();
+        const tripDate = startDate;
+
+        if (tripDate > currentDate) {
+            setTimeout(async () => {
+                try {
+                    const emailContent = {
+                        subject: "Alerta de viaje",
+                        to_email: email,
+                        message_html: `Origen: ${origen}, Destino: ${destino}, Fecha ida: ${startDate}, Fecha vuelta: ${endDate}`
+                    };
+                    const result = await emailjs.send('gmail', 'template_eo49qj5', emailContent, 'CPcOPBvvDFM4roihl');
+                    console.log(result.text);
+                } catch (error) {
+                    console.log(error);
+                }
+            }, 60 * 1000);
+        } else {
+            try {
+                const emailContent = {
+                    subject: "Alerta de viaje",
+                    to_email: email,
+                    message_html: `Origen: ${origen}, Destino: ${destino}, Fecha ida: ${startDate}, Fecha vuelta: ${endDate}`
+                };
+                const result = await emailjs.send('gmail', 'template_eo49qj5', emailContent, 'CPcOPBvvDFM4roihl');
+                console.log(result.text);
+            } catch (error) {
+                console.log(error);
+            }
         }
     };
 
     const handleSubmitForm = async (event) => {
         event.preventDefault();
-
         if (origen !== "" || destino !== "" || startDate !== null || endDate !== null) {
             try {
                 await sendAlert();
-                setEmail("");
-                setPassword("");
+                setMostrarModal(true);
+                setOrigen("");
+                setDestino("");
+                setStartDate(null);
+                setEndDate(null);
             } catch (error) {
                 console.log(error)
             }
@@ -114,8 +132,6 @@ const useFirestore = () => {
         handleDestinoChange,
         setInputIncorrecto,
         inputIncorrecto,
-        handleStartDateChange,
-        handleEndDateChange,
         startDate,
         endDate,
         handleSubmitForm

@@ -1,11 +1,13 @@
 import { useState, useEffect, useContext } from "react"
-import Ante from '../Ante/Ante';
+import { AppContext } from "../../context/Proveedor";
 import useFirestore from '../../hooks/useFirestore';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+// import Ante from '../Ante/Ante';
+import Final from '../Final/Final';
 import moment from 'moment';
-import { AppContext } from "../../context/Proveedor";
-
+import ModalAlertaCreada from "../ModalAlertaCreada/ModalAlertaCreada";
+import Button from 'react-bootstrap/Button'
 
 const Prueba = () => {
     const {
@@ -15,18 +17,22 @@ const Prueba = () => {
         handleOrigenChange,
         handleDestinoChange,
         inputIncorrecto,
+        handleSubmitForm
+    } = useFirestore();
+
+    const {
+        email,
+        mostrarModal,
         handleStartDateChange,
         handleEndDateChange,
         startDate,
         endDate,
-        handleSubmitForm
-    } = useFirestore();
-
-    const { email } = useContext(AppContext)
+        orientacion,
+        setOrientacion
+    } = useContext(AppContext)
 
     const [filtro, setFiltro] = useState([]);
     const [error, setError] = useState(null);
-    const [orientacion, setOrientacion] = useState("");
 
     const handleFiltro = () => {
         try {
@@ -42,6 +48,7 @@ const Prueba = () => {
                     );
                 });
                 setFiltro(viajesFiltrados);
+
             } else if (orientacion === "idaYvuelta") {
                 viajesFiltrados = viajesFiltrados.filter((item) => {
                     const fechaSalida = moment(item["Fecha salida"], "DD/MM/YYYY");
@@ -58,22 +65,25 @@ const Prueba = () => {
         } catch (error) {
             setError(error.message)
         }
+    }
+
+    const handleExternalLink = (url) => {
+        window.location.href = url;
     };
 
     useEffect(() => {
-        console.log("email Prueba:", email);
     }, [email]);
 
     return (
-        <>
+        <div>
             <div className="inputs">
                 <label>
-                    Ida:
+                    Ida
                     <input type="radio" value="ida" name="ida" checked={orientacion === "ida"} onChange={(e) => setOrientacion(e.target.value)} />
-                    <br />
                 </label>
+                <br />
                 <label>
-                    Ida y vuelta:
+                    Ida y vuelta
                     <input type="radio" value="idaYvuelta" name="idaYvuelta" checked={orientacion === "idaYvuelta"} onChange={(e) => setOrientacion(e.target.value)} />
                 </label>
                 <br />
@@ -99,14 +109,19 @@ const Prueba = () => {
                     </label>
                 )}
                 <br />
-                <button onClick={handleFiltro} disabled={!origen || !destino || !startDate || (orientacion === "idaYvuelta" && !endDate)}>Buscar</button>
+                <Button variant='danger' onClick={handleFiltro} disabled={!origen || !destino || !startDate || (orientacion === "idaYvuelta" && !endDate)}>Buscar</Button>
                 <br />
-                {email !== '' && email !== undefined ? <button onClick={handleSubmitForm}>Crear alerta</button> : null}
+                {email !== '' && email !== undefined ? <Button variant='danger' onClick={handleSubmitForm}>Crear alerta</Button> : null}
+                < Button variant='danger' onClick={() => handleExternalLink('https://webventas.sofse.gob.ar/')} disabled={!origen || !destino || !startDate || (orientacion === "idaYvuelta" && !endDate)}>
+                    Comprar pasaje
+                </Button>
             </div>
+            {mostrarModal === true ? <ModalAlertaCreada /> : null}
             {error && <div>{error}</div>}
             {inputIncorrecto && <div>{inputIncorrecto}</div>}
-            <Ante filtro={filtro} />
-        </>
+            {/* {<Ante filtro={filtro} />} */}
+            {<Final filtro={filtro} />}
+        </div >
     )
 }
 

@@ -1,8 +1,11 @@
-import React from 'react'
+import { useContext } from "react"
 import { Link } from 'react-router-dom';
+import { AppContext } from '../../context/Proveedor';
 
+const ModalRegistro = () => {
 
-const ModalRegistro = ({ setMostrarModal }) => {
+    const { setMostrarModal } = useContext(AppContext)
+
     return (
         <div className="modalRegistro">
             <div className="contenidoModal">

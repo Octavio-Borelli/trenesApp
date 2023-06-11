@@ -1,25 +1,3 @@
-.fondoIngresar{
-  height: 100vh;
-  width: 100vw;
-  background-color: aqua;
-  display: grid;
-}
-
-.ingresar{
-  display: grid;
-  margin: auto;
-  align-items: center;
-}
-
-
-
-.botonIngresar{
-  border: tomato;
-  border-radius: 1rem;
-  height: 2rem;
-  width:auto;
-  
-}
 
 .item {
   max-width: 20rem;
@@ -35,8 +13,7 @@ h4 {
   margin: 0.5rem;
   }
 
-
-  .modalRegistro {
+.modalRegistro {
   
       width: 100%;
       height: 100%;
@@ -64,3 +41,107 @@ h4 {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     border-radius: 0.5rem;
   }
+
+  .fondoIngresar {
+    background-color: #F2F2F2;
+    border-top-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+  }
+  
+  .ingresar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+  }
+  
+  .usuarioIngresar {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+  }
+  
+  .contraseñaIngresar {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+  }
+  
+  .botonIngresar {
+    width: 100px;
+    margin-top: 10px;
+    border-radius: 5px;
+  }
+  
+  .modalAlertaCreada{
+    width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      z-index: 2;
+
+  }
+  :root {
+    --error-color: #dc3545;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+}
+
+.textBox.error input {
+    border-color: var(--error-color);
+}
+
+.textBox.success input {
+    border-color: var(--success-color);
+}
+
+
+.textBox small {
+    color: var(--error-color);
+    display: block;
+    padding-top: 0.5rem;
+    padding-left: 6.5rem;
+    margin-right: 1rem;
+}
+
+.inputsFormulario.error input {
+    border-color: var(--error-color);
+}
+
+.inputsFormulario.success input {
+    border-color: var(--success-color);
+}
+
+
+.inputsFormulario small {
+    color: var(--error-color);
+    display: block;
+    margin-left: 0.6rem;
+    margin-bottom: 0.5rem;
+}
+
+
+.details.error input {
+    border-color: var(--error-color);
+}
+
+.details.success input {
+    border-color: var(--success-color);
+}
+
+
+.details small {
+    color: var(--error-color);
+    display: block;
+    margin-left: 0.6rem;
+    margin-bottom: 0.5rem;
+}
