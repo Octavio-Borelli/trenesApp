@@ -3,17 +3,13 @@ import { AppContext } from "../../context/Proveedor";
 import useFirestore from '../../hooks/useFirestore';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-// import Ante from '../Ante/Ante';
 import Final from '../Final/Final';
 import moment from 'moment';
 import ModalAlertaCreada from "../ModalAlertaCreada/ModalAlertaCreada";
-import Button from 'react-bootstrap/Button'
 
 const Prueba = () => {
     const {
         viaje,
-        origen,
-        destino,
         handleOrigenChange,
         handleDestinoChange,
         inputIncorrecto,
@@ -28,11 +24,17 @@ const Prueba = () => {
         startDate,
         endDate,
         orientacion,
-        setOrientacion
+        setOrientacion,
+        origen,
+        destino,
+        setEndDate
     } = useContext(AppContext)
 
     const [filtro, setFiltro] = useState([]);
     const [error, setError] = useState(null);
+    const [retraso, setRetraso] = useState(true);
+    const [spiner, setSpiner] = useState(true);
+    const [ocultarEncabezado, setOcultarEncabezado] = useState(true);
 
     const handleFiltro = () => {
         try {
@@ -48,6 +50,7 @@ const Prueba = () => {
                     );
                 });
                 setFiltro(viajesFiltrados);
+                setEndDate("")
 
             } else if (orientacion === "idaYvuelta") {
                 viajesFiltrados = viajesFiltrados.filter((item) => {
@@ -67,12 +70,90 @@ const Prueba = () => {
         }
     }
 
+    // const handleFechaViaje = () => {
+    //     const fechaHoy = new Date();
+
+    //     if (
+    //         (orientacion === "idaYvuelta" &&
+    //             startDate <= fechaHoy &&
+    //             endDate > fechaHoy) ||
+    //         (orientacion === "ida" &&
+    //             startDate > fechaHoy)) {
+    //         const timeout = setTimeout(() => {
+    //             setRetraso(false);
+    //         }, 10000);
+    //         return () => {
+    //             clearTimeout(timeout);
+    //         };
+    //     } else if (
+    //         (orientacion === "idaYvuelta" &&
+    //             startDate > fechaHoy &&
+    //             endDate > fechaHoy)) {
+    //         const timeout = setTimeout(() => {
+    //             setRetraso(false);
+    //         }, 10000);
+    //         return () => {
+    //             clearTimeout(timeout);
+    //         };
+    //     } else {
+    //         const timeout = setTimeout(() => {
+    //             setRetraso(false);
+    //         }, 2000);
+    //         return () => {
+    //             clearTimeout(timeout);
+    //         }
+    //     };
+    // }
+
+
+    useEffect(() => {
+        let timeout;
+        const fechaHoy = new Date();
+
+        console.log(orientacion)
+        console.log(origen)
+        console.log(destino)
+        console.log(startDate)
+        console.log(endDate)
+
+        if (
+            (orientacion === "idaYvuelta" &&
+                startDate <= fechaHoy &&
+                endDate > fechaHoy) ||
+            (orientacion === "ida" && startDate > fechaHoy)
+        ) {
+            timeout = setTimeout(() => {
+                setRetraso(false);
+            }, 10000);
+        } else if (
+            orientacion === "idaYvuelta" &&
+            startDate > fechaHoy &&
+            endDate > fechaHoy
+        ) {
+            timeout = setTimeout(() => {
+                setRetraso(false);
+            }, 10000);
+        } else {
+            timeout = setTimeout(() => {
+                setRetraso(false);
+            }, 2000);
+        }
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [orientacion, startDate, endDate, origen, destino]);
+
+
+    const handleBuscarClick = () => {
+        handleFiltro();
+        // handleFechaViaje();
+        setSpiner(false);
+        setOcultarEncabezado(false);
+    };
+
     const handleExternalLink = (url) => {
         window.location.href = url;
     };
-
-    useEffect(() => {
-    }, [email]);
 
     return (
         <div>
@@ -109,20 +190,23 @@ const Prueba = () => {
                     </label>
                 )}
                 <br />
-                <Button variant='danger' onClick={handleFiltro} disabled={!origen || !destino || !startDate || (orientacion === "idaYvuelta" && !endDate)}>Buscar</Button>
+                <button onClick={handleBuscarClick} disabled={!origen || !destino || !startDate || (orientacion === "idaYvuelta" && !endDate)}>Buscar</button>
                 <br />
-                {email !== '' && email !== undefined ? <Button variant='danger' onClick={handleSubmitForm}>Crear alerta</Button> : null}
-                < Button variant='danger' onClick={() => handleExternalLink('https://webventas.sofse.gob.ar/')} disabled={!origen || !destino || !startDate || (orientacion === "idaYvuelta" && !endDate)}>
+                {email !== '' && email !== undefined ? <button onClick={handleSubmitForm}>Crear alerta</button> : null}
+                < button onClick={() => handleExternalLink('https://webventas.sofse.gob.ar/')} disabled={!origen || !destino || !startDate || (orientacion === "idaYvuelta" && !endDate)}>
                     Comprar pasaje
-                </Button>
+                </button>
             </div>
-            {mostrarModal === true ? <ModalAlertaCreada /> : null}
-            {error && <div>{error}</div>}
-            {inputIncorrecto && <div>{inputIncorrecto}</div>}
-            {/* {<Ante filtro={filtro} />} */}
-            {<Final filtro={filtro} />}
+            {mostrarModal ? <ModalAlertaCreada /> : null}
+            {error && <span>{error}</span>}
+            {inputIncorrecto && <span>{inputIncorrecto}</span>}
+            {!spiner && retraso ? (
+                <h2>Buscando viajes...</h2>)
+                : <Final filtro={filtro} ocultarEncabezado={ocultarEncabezado} />}
         </div >
     )
+
+
 }
 
 export default Prueba;

@@ -19,8 +19,6 @@ const useFirestore = () => {
     } = useContext(AppContext)
 
     const [viaje, setViaje] = useState([])
-    // const [origen, setOrigen] = useState("")
-    // const [destino, setDestino] = useState("")
     const [inputIncorrecto, setInputIncorrecto] = useState(null);
 
     const getDataFirebase = async () => {
@@ -77,9 +75,9 @@ const useFirestore = () => {
 
     const sendAlert = async () => {
         const currentDate = new Date();
-        const tripDate = startDate;
+        // const tripDate = startDate;
 
-        if (tripDate > currentDate) {
+        if (startDate > currentDate) {
             setTimeout(async () => {
                 try {
                     const emailContent = {
@@ -126,15 +124,12 @@ const useFirestore = () => {
 
     return {
         viaje,
-        origen,
-        destino,
         handleOrigenChange,
         handleDestinoChange,
         setInputIncorrecto,
         inputIncorrecto,
-        startDate,
-        endDate,
         handleSubmitForm
+
     }
 }
 
