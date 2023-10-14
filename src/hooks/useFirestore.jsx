@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react"
 import { ref, get, onValue } from "firebase/database";
 import emailjs from "emailjs-com";
 import { AppContext } from "../context/Proveedor";
-import { db } from '../firebase/firebase';
+import { db } from '../firebase/firebase'
 
 const useFirestore = () => {
 
@@ -75,8 +75,6 @@ const useFirestore = () => {
 
     const sendAlert = async () => {
         const currentDate = new Date();
-        // const tripDate = startDate;
-
         if (startDate > currentDate) {
             setTimeout(async () => {
                 try {
@@ -129,7 +127,6 @@ const useFirestore = () => {
         setInputIncorrecto,
         inputIncorrecto,
         handleSubmitForm
-
     }
 }
 

@@ -1,12 +1,12 @@
-import React from "react"
+import React from 'react'
 
-const Campos = ({ item }) => {
+const CamposVUelta = ({ item }) => {
 
     return (
         <div className="container" key={item.id}>
             <div className="item" style={{ cursor: 'pointer' }}>
-                <h4>Origen: {item.Origen}</h4>
-                <h4>Destino: {item.Destino}</h4>
+                <h4>Origen: {item.Destino}</h4>
+                <h4>Destino: {item.Origen}</h4>
                 <h4>Fecha salida: {item['Fecha salida']}</h4>
                 <h4>Servicio: {item.Servicio}</h4>
                 <h4>Hora salida: {item['Hora salida']}</h4>
@@ -21,5 +21,4 @@ const Campos = ({ item }) => {
     )
 }
 
-export default Campos
-
+export default CamposVUelta

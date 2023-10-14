@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react"
+import { useState, useContext } from "react"
 import { AppContext } from "../../context/Proveedor";
 import useFirestore from '../../hooks/useFirestore';
 import DatePicker from 'react-datepicker';
@@ -35,6 +35,8 @@ const Prueba = () => {
     const [retraso, setRetraso] = useState(true);
     const [spiner, setSpiner] = useState(true);
     const [ocultarEncabezado, setOcultarEncabezado] = useState(true);
+    const [encabezadoCompleto, setencabezadoCompleto] = useState(`Trenes ida - ${origen} a ${destino}`);
+
 
     const handleFiltro = () => {
         try {
@@ -51,7 +53,6 @@ const Prueba = () => {
                 });
                 setFiltro(viajesFiltrados);
                 setEndDate("")
-
             } else if (orientacion === "idaYvuelta") {
                 viajesFiltrados = viajesFiltrados.filter((item) => {
                     const fechaSalida = moment(item["Fecha salida"], "DD/MM/YYYY");
@@ -70,85 +71,46 @@ const Prueba = () => {
         }
     }
 
-    // const handleFechaViaje = () => {
-    //     const fechaHoy = new Date();
-
-    //     if (
-    //         (orientacion === "idaYvuelta" &&
-    //             startDate <= fechaHoy &&
-    //             endDate > fechaHoy) ||
-    //         (orientacion === "ida" &&
-    //             startDate > fechaHoy)) {
-    //         const timeout = setTimeout(() => {
-    //             setRetraso(false);
-    //         }, 10000);
-    //         return () => {
-    //             clearTimeout(timeout);
-    //         };
-    //     } else if (
-    //         (orientacion === "idaYvuelta" &&
-    //             startDate > fechaHoy &&
-    //             endDate > fechaHoy)) {
-    //         const timeout = setTimeout(() => {
-    //             setRetraso(false);
-    //         }, 10000);
-    //         return () => {
-    //             clearTimeout(timeout);
-    //         };
-    //     } else {
-    //         const timeout = setTimeout(() => {
-    //             setRetraso(false);
-    //         }, 2000);
-    //         return () => {
-    //             clearTimeout(timeout);
-    //         }
-    //     };
-    // }
-
-
-    useEffect(() => {
-        let timeout;
-        const fechaHoy = new Date();
-
-        console.log(orientacion)
-        console.log(origen)
-        console.log(destino)
-        console.log(startDate)
-        console.log(endDate)
-
-        if (
-            (orientacion === "idaYvuelta" &&
-                startDate <= fechaHoy &&
-                endDate > fechaHoy) ||
-            (orientacion === "ida" && startDate > fechaHoy)
-        ) {
-            timeout = setTimeout(() => {
-                setRetraso(false);
-            }, 10000);
-        } else if (
-            orientacion === "idaYvuelta" &&
-            startDate > fechaHoy &&
-            endDate > fechaHoy
-        ) {
-            timeout = setTimeout(() => {
-                setRetraso(false);
-            }, 10000);
-        } else {
-            timeout = setTimeout(() => {
-                setRetraso(false);
-            }, 2000);
+    const handleRetrasoViaje = () => {
+        try {
+            const fechaHoy = new Date();
+            if (
+                (orientacion === "ida" &&
+                    startDate > fechaHoy) ||
+                (orientacion === "idaYvuelta" &&
+                    startDate <= fechaHoy &&
+                    endDate > fechaHoy) ||
+                (orientacion === "idaYvuelta" &&
+                    startDate > fechaHoy &&
+                    endDate > fechaHoy)
+            ) {
+                const timeout = setTimeout(() => {
+                    setRetraso(false);
+                }, 10000);
+                return () => {
+                    clearTimeout(timeout);
+                };
+            }
+            else {
+                const timeout = setTimeout(() => {
+                    setRetraso(false);
+                }, 3000);
+                return () => {
+                    clearTimeout(timeout);
+                }
+            };
+        } catch (error) {
+            console.log(error)
         }
-        return () => {
-            clearTimeout(timeout);
-        };
-    }, [orientacion, startDate, endDate, origen, destino]);
-
+    }
 
     const handleBuscarClick = () => {
-        handleFiltro();
-        // handleFechaViaje();
         setSpiner(false);
+        handleFiltro();
+        handleRetrasoViaje();
         setOcultarEncabezado(false);
+        setRetraso(true);
+        setencabezadoCompleto("")
     };
 
     const handleExternalLink = (url) => {
@@ -202,11 +164,9 @@ const Prueba = () => {
             {inputIncorrecto && <span>{inputIncorrecto}</span>}
             {!spiner && retraso ? (
                 <h2>Buscando viajes...</h2>)
-                : <Final filtro={filtro} ocultarEncabezado={ocultarEncabezado} />}
+                : <Final filtro={filtro} ocultarEncabezado={ocultarEncabezado} setOcultarEncabezado={setOcultarEncabezado} encabezadoCompleto={encabezadoCompleto} />}
         </div >
     )
-
-
 }
 
 export default Prueba;
